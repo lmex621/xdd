@@ -23,8 +23,7 @@ return reply(
          `更新` => `发送扫码或进入网站绑定QQ`
          `公告` => `发送CK绑定QQ后输入"查询"`
          `密码` => `你猜`
-         `教程` => `手机端Alook浏览器获取Cookie教程“https://docs.qq.com/doc/DTFhQUGlhSVlZckRV”
-PC端获取Cookie教程“https://shimo.im/docs/YcdghjYdKY9yPDK6”`
+         `教程` => `手机端Alook浏览器获取Cookie教程“https://docs.qq.com/doc/DTFhQUGlhSVlZckRV”\nPC端获取Cookie教程“https://shimo.im/docs/YcdghjYdKY9yPDK6”`
          `菜单` => `
                 功能菜单
        ———————————     
