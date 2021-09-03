@@ -23,9 +23,9 @@ return reply(
          `更新` => `发送扫码或进入网站绑定QQ`
          `公告` => `发送CK绑定QQ后输入"查询"`
          `密码` => `你猜`
-         `教程` => `手机端Alook浏览器获取Cookie教程“https://docs.qq.com/doc/DTFhQUGlhSVlZckRV”\nPC端获取Cookie教程“https://shimo.im/docs/YcdghjYdKY9yPDK6”`
+         `教程` => `手机端Alook浏览器获取Cookie教程“https://docs.qq.com/doc/DTFhQUGlhSVlZckRV” PC端获取Cookie教程“https://shimo.im/docs/YcdghjYdKY9yPDK6”`
          `菜单` => `
-                功能菜单
+                小滴滴菜单
        ———————————     
             教程  丨  查询       
             公告  丨  扫码
@@ -42,6 +42,6 @@ return reply(
        二次元图丨 网易热评 
        动漫头像丨 舔狗日记       
       ———————————         
-              傻逼机器人`
+              小滴滴机器人`
      ]
 )
