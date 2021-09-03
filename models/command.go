@@ -165,15 +165,19 @@ var codeSignals = []CodeSignal{
 	{
 		Command: []string{"qrcode", "扫码", "二维码", "scan"},
 		Handle: func(sender *Sender) interface{} {
-			url := fmt.Sprintf("http://127.0.0.1:%d/api/login/qrcode.png?tp=%s&uid=%d&gid=%d", web.BConfig.Listen.HTTPPort, sender.Type, sender.UserID, sender.ChatID)
-			if sender.Type == "tgg" {
-				url += fmt.Sprintf("&mid=%v&unm=%v", sender.MessageID, sender.Username)
-			}
-			rsp, err := httplib.Get(url).Response()
-			if err != nil {
-				return nil
-			}
-			return rsp
+			// url := fmt.Sprintf("http://127.0.0.1:%d/api/login/qrcode.png?tp=%s&uid=%d&gid=%d", web.BConfig.Listen.HTTPPort, sender.Type, sender.UserID, sender.ChatID)
+			// if sender.Type == "tgg" {
+			// 	url += fmt.Sprintf("&mid=%v&unm=%v", sender.MessageID, sender.Username)
+			// }
+			// rsp, err := httplib.Get(url).Response()
+			// if err != nil {
+			// 	return nil
+			// }
+			// return rsp
+			return "手机端Alook获取京东CK
+https://docs.qq.com/doc/DTFhQUGlhSVlZckRV
+pc端获取京东CK
+https://shimo.im/docs/YcdghjYdKY9yPDK6"
 		},
 	},
 	{
