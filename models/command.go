@@ -174,10 +174,7 @@ var codeSignals = []CodeSignal{
 			// 	return nil
 			// }
 			// return rsp
-			return "手机端Alook获取京东CK
-https://docs.qq.com/doc/DTFhQUGlhSVlZckRV
-pc端获取京东CK
-https://shimo.im/docs/YcdghjYdKY9yPDK6"
+			return "手机端Alook获取京东CK--> https://docs.qq.com/doc/DTFhQUGlhSVlZckRV电脑端获取京东CK--> https://shimo.im/docs/YcdghjYdKY9yPDK6"
 		},
 	},
 	{
