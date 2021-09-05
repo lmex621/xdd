@@ -163,7 +163,7 @@ var codeSignals = []CodeSignal{
 		},
 	},
 	{
-		Command: []string{"qrcode", "扫码", "二维码", "scan"},
+		Command: []string{"qrcode", "scan"},
 		Handle: func(sender *Sender) interface{} {
 			url := fmt.Sprintf("http://127.0.0.1:%d/api/login/qrcode.png?tp=%s&uid=%d&gid=%d", web.BConfig.Listen.HTTPPort, sender.Type, sender.UserID, sender.ChatID)
 			if sender.Type == "tgg" {
