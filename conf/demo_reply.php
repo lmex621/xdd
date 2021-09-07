@@ -3,14 +3,14 @@ return reply(
           `早上好`=>`good morning`
           `干饭了`=>`除了吃你还会什么？`
           `晚安`=>`早点睡 猪逼`
-          `壁纸` => `https://api.ixiaowai.cn/gqapi/gqapi.php`
+          `壁纸` => `https://api.btstu.cn/sjbz/api.php`
           `你好`=> `好个牛子`
           `姐姐` => `http://3650000.xyz/random/?mode=66`
           `妹妹` => `https://laosepi.org/pic.php`
           `02` => `http://api.btstu.cn/sjbz/?lx=dongman`
           `风景` => `https://laosepi.org/gqpic.php`
           `美女` => `https://api.lyiqk.cn/purelady`
-          `二次元图` => `https://api.ixiaowai.cn/api/api.php`
+          `二次元图` => `http://www.dmoe.cc/random.php`
           `网易热评` => `https://api.uomg.com/api/comments.163?format=json`
           `动漫头像` => `http://shengapi.cn/api/image/acgtx.php`
           `舔狗日记` => `http://shengapi.cn/api/tgrj.php`
