@@ -77,8 +77,8 @@ func (sender *Sender) handleJdCookies(handle func(ck *JdCookie)) error {
 			}
 		}
 		if !ok {
-			sender.Reply("你尚未绑定🐶东账号，请对我说扫码，扫码后即可查询账户资产信息。")
-			return errors.New("你尚未绑定🐶东账号，请对我说扫码，扫码后即可查询账户资产信息。")
+			sender.Reply("你尚未绑定🐶东账号，添加我为好友，并对我说扫码，将CK发给我绑定，即可查询账户资产信息。")
+			return errors.New("你尚未绑定🐶东账号，添加我为好友，并对我说扫码，将CK发给我绑定，即可查询账户资产信息。。")
 		}
 	} else {
 		cks = LimitJdCookie(cks, a)
