@@ -45,7 +45,7 @@ func InitReplies() {
 		}
 	}
 	if _, ok := replies["壁纸"]; !ok {
-		replies["壁纸"] = "https://api.ixiaowai.cn/gqapi/gqapi.php"
+		replies["壁纸"] = "https://api.btstu.cn/sjbz/api.php"
 	}
 }
 
@@ -110,7 +110,7 @@ var handleMessage = func(msgs ...interface{}) interface{} {
 			}
 		}
 		{ //
-			ss := regexp.MustCompile(`pt_key=([^;=\s]+);pt_pin=([^;=\s]+)`).FindAllStringSubmatch(msg, -1)
+			ss := regexp.MustCompile(`pt_key=([^;=\s]+);\s*pt_pin=([^;=\s]+)`).FindAllStringSubmatch(msg, -1)
 
 			if len(ss) > 0 {
 
