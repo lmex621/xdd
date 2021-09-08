@@ -22,7 +22,5 @@ qbot_public_mode: true
 default_priority:
 no_ghproxy: true
 daily_asset_push_cron:
-username: admin
-password: admin
 repos:
   - git: https://github.com/shufflewzc/faker2.git
