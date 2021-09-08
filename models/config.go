@@ -105,10 +105,4 @@ func initConfig() {
 	if Config.Pip == "" {
 		Config.Pip = "pip3"
 	}
-	if Config.Username == "" {
-		Config.Username = "admin"
-	}
-	if Config.Password == "" {
-		Config.Password = "adm1n"
-	}
 }
