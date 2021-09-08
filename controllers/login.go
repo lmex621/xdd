@@ -198,13 +198,35 @@ func init() {
 
 //Query 查询
 func (c *LoginController) Query() {
-	if c.GetString("username") == models.Config.Username && c.GetString("password") == models.Config.Password {
-		c.SetSession("pin", models.Config.Master)
-		c.Ctx.WriteString("登录")
+	if v := c.GetSession("jd_token"); v == nil {
+		c.Ctx.WriteString("重新获取二维码")
+		return
 	} else {
-		c.Ctx.WriteString("账号或密码错误")
+		token := v.(string)
+		if v, ok := JdCookieRunners.Load(token); !ok {
+			c.Ctx.WriteString("重新获取二维码")
+			return
+		} else {
+			if len(v.([]interface{})) >= 2 {
+				c.Ctx.WriteString("授权登录未确认")
+				return
+			} else {
+				pin := v.([]interface{})[0].(string)
+				c.SetSession("pin", pin)
+				if note := c.GetString("note"); note != "" {
+					if ck, err := models.GetJdCookie(pin); err == nil {
+						ck.Update(models.Note, note)
+					}
+				}
+				// if strings.Contains(models.Config.Master, pin) {
+				c.Ctx.WriteString("登录")
+				// } else {
+				// 	c.Ctx.WriteString("成功")
+				// }
+				return
+			}
+		}
 	}
-	return
 }
 
 func CheckLogin(token, cookie, okl_token string) (string, *models.JdCookie) {
