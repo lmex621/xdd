@@ -21,7 +21,7 @@ let cookiesArr = [],
 let tytpacketId = '';
 if (process.env.tytpacketId) {
     tytpacketId = process.env.tytpacketId;
-}
+} 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
             cookiesArr.push(jdCookieNode[item])
@@ -97,13 +97,16 @@ function tythelp() {
                 data = JSON.parse(data);
 
                 if (data.code == 0) {
-                    console.log("帮砍：" + data.data.amount)
+                    // console.log("帮砍：" + data.data.amount)
 
                 } else if (data.msg.indexOf("完成") != -1) {
                     console.log("已完成砍价")
                     status = 1
                 } else {
-                    console.log(data.msg)
+                    // if (data.msg !== "need verify"){
+                    //     console.log(data.msg)
+                    // }
+                    // console.log(data.msg)
                 }
             } catch (e) {
                 $.logErr(e, resp);
@@ -519,7 +522,7 @@ function Env(t, e) {
                             "open-url": e,
                             "media-url": s
                         }
-                    }
+                    } 
                     if (this.isSurge()) {
                         let e = t.url || t.openUrl || t["open-url"];
                         return {

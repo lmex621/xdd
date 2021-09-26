@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/Mrs4s/MiraiGo/utils"
 	"io"
 	"io/ioutil"
 	"os"
@@ -31,7 +32,11 @@ type Yaml struct {
 	QbotPublicMode      bool   `yaml:"qbot_public_mode"`
 	DailyAssetPushCron  string `yaml:"daily_asset_push_cron"`
 	Version             string `yaml:"version"`
+	IsHelp              bool   `yaml:"IsHelp"`
+	IsOldV4             bool   `yaml:"IsOldV4"`
 	ApiToken            string `yaml:"ApiToken"`
+	TGURL               string `yaml:"TGURL"`
+	SMSAddress          string `yaml:"SMSAddress"`
 	Node                string
 	Npm                 string
 	Python              string
@@ -96,6 +101,9 @@ func initConfig() {
 	}
 	if Config.Npm == "" {
 		Config.Npm = "npm"
+	}
+	if Config.ApiToken == "" {
+		Config.ApiToken = utils.RandomString(17)
 	}
 	if Config.Node == "" {
 		Config.Node = "node"
