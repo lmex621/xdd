@@ -30,6 +30,21 @@ type Sender struct {
 	ReplySenderUserID int
 }
 
+type QQuery struct {
+	Code int `json:"code"`
+	Data struct {
+		LSid          string `json:"lSid"`
+		QqLoginQrcode struct {
+			Bytes byte   `json:"bytes"`
+			Sig   string `json:"sig"`
+		} `json:"qqLoginQrcode"`
+		RedirectURL string `json:"redirectUrl"`
+		State       string `json:"state"`
+		TempCookie  string `json:"tempCookie"`
+	} `json:"data"`
+	Message string `json:"message"`
+}
+
 func (sender *Sender) Reply(msg string) {
 	switch sender.Type {
 	case "tg":
@@ -216,8 +231,36 @@ var codeSignals = []CodeSignal{
 		},
 	},
 
+	
+	//{
+	//	Command: []string{"qrcode", "扫码", "二维码", "scan"},
+	//	Handle: func(sender *Sender) interface{} {
+	//		rsp, err := httplib.Get("https://api.kukuqaq.com/jd/qrcode").Response()
+	//		if err != nil {
+	//			return nil
+	//		}
+	//		body, err1 := ioutil.ReadAll(rsp.Body)
+	//		if err1 == nil {
+	//			fmt.Println(string(body))
+	//		}
+	//		s := &QQuery{}
+	//		if len(body) > 0 {
+	//			json.Unmarshal(body, &s)
+	//		}
+	//		jsonByte, _ := json.Marshal(s)
+	//		jsonStr := string(jsonByte)
+	//		fmt.Printf("%v", jsonStr)
+	//		return `{"url":"` + "http://www.baidu.com" + `","img":"` + s.Data.QqLoginQrcode.Bytes + `"}`
+	//	},
+	//},
 
 
+
+
+
+	// 以下为原版xdd扫码代码
+	
+	
 	
 	//{
 	//	Command: []string{"qrcode", "扫码", "二维码", "scan"},
@@ -300,7 +343,69 @@ var codeSignals = []CodeSignal{
 			return fmt.Sprintf("余额%d", GetCoin(sender.UserID))
 		},
 	},
-{
+ {
+		Command: []string{"查询", "query"},
+		Handle: func(sender *Sender) interface{} {
+			if sender.IsAdmin {
+				sender.handleJdCookies(func(ck *JdCookie) {
+					sender.Reply(ck.Query())
+				})
+			} else {
+				if getLimit(sender.UserID, 1) {
+					sender.handleJdCookies(func(ck *JdCookie) {
+						sender.Reply(ck.Query())
+					})
+				} else {
+					sender.Reply(fmt.Sprintf("鉴于东哥对接口限流，为了不影响大家的任务正常运行，即日起每日限流%d次，已超过今日限制", Config.Lim))
+				}
+			}
+
+			return nil
+		},
+	},
+	{
+		Command: []string{"新版查询", "query"},
+		Handle: func(sender *Sender) interface{} {
+			if sender.IsAdmin {
+				sender.handleJdCookies(func(ck *JdCookie) {
+					sender.Reply(ck.Query1())
+				})
+			} else {
+				if getLimit(sender.UserID, 1) {
+					sender.handleJdCookies(func(ck *JdCookie) {
+						sender.Reply(ck.Query1())
+					})
+				} else {
+					sender.Reply(fmt.Sprintf("鉴于东哥对接口限流，为了不影响大家的任务正常运行，即日起每日限流%d次，已超过今日限制", Config.Lim))
+				}
+			}
+
+			return nil
+		},
+	},	
+	{
+		Command: []string{"月度查询", "query"},
+		Handle: func(sender *Sender) interface{} {
+			if sender.IsAdmin {
+				sender.handleJdCookies(func(ck *JdCookie) {
+					sender.Reply(ck.Query2())
+				})
+			} else {
+				if getLimit(sender.UserID, 1) {
+					sender.handleJdCookies(func(ck *JdCookie) {
+						sender.Reply(ck.Query2())
+					})
+				} else {
+					sender.Reply(fmt.Sprintf("鉴于东哥对接口限流，为了不影响大家的任务正常运行，即日起每日限流%d次，已超过今日限制", Config.Lim))
+				}
+			}
+
+			return nil
+		},
+	},	
+	
+	
+/*{
 		Command: []string{"查询", "query"},
 		Handle: func(sender *Sender) interface{} {
 			sender.handleJdCookies(func(ck *JdCookie) {
@@ -327,7 +432,7 @@ var codeSignals = []CodeSignal{
 			})
 			return nil
 		},
-	},
+	},*/
 
 
 {

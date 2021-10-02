@@ -107,7 +107,19 @@ var handleMessage = func(msgs ...interface{}) interface{} {
 			ss := regexp.MustCompile(`pt_pin=([^;=\s]+);\s*pt_key=([^;=\s]+)`).FindAllStringSubmatch(msg, -1)
 
 			if len(ss) > 0 {
-				sender.Reply(fmt.Sprintf("淦，正确格式是【pt_key=xxx;pt_pin=xxx;】,pt_key在前,pt_pin在后,前后各一个分号，第一个;后不能留空格，教了多少次了？憨逼！"))
+				sender.Reply(fmt.Sprintf("淦，正确格式是【pt_key=xxx;pt_pin=xxx;】,pt_key在前,pt_pin在后,前后各一个分号，教了多少次了？憨逼！"))
+				
+			}
+		}
+
+
+		
+		
+{ //格式错误提示
+			ss := regexp.MustCompile(`pt_pin=([^;=\s]+);\s*pt_key=([^;=\s]+)`).FindAllStringSubmatch(msg, -1)
+
+			if len(ss) > 0 {
+				sender.Reply(fmt.Sprintf("淦，正确格式是【pt_key=xxx;pt_pin=xxx;】,pt_key在前,pt_pin在后,前后各一个分号，教了多少次了？憨逼！"))
 				
 			}
 		}

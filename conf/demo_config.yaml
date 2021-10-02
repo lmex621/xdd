@@ -9,6 +9,8 @@ containers:
     mode: parallel
     limit: 9999 #限制容器ck数目
 theme: ./theme/admin.html #自定义主题，支持本地、网络路径
+Lim: #填写1-N 代表限制次数
+IsAddFriend: #填写true或者false  false
 static: ./static #静态文件 便于自定义二维码页面时，引入css、js等文件（不用动）
 master: jd_xxxxx #管理员账户pin，有多个用'&'拼接（访问ip:8080/admin使用）可以自定义密码如  admin 后面不能有注释，配置后删除
 #数据库 支持sqlite3、mysql和postgres
