@@ -32,20 +32,23 @@ type Yaml struct {
 	QbotPublicMode      bool   `yaml:"qbot_public_mode"`
 	DailyAssetPushCron  string `yaml:"daily_asset_push_cron"`
 	Version             string `yaml:"version"`
+	CTime               string `yaml:"AtTime"`
 	IsHelp              bool   `yaml:"IsHelp"`
 	IsOldV4             bool   `yaml:"IsOldV4"`
 	ApiToken            string `yaml:"ApiToken"`
+	Wskey               bool   `yaml:"Wskey"`
 	TGURL               string `yaml:"TGURL"`
 	SMSAddress          string `yaml:"SMSAddress"`
+	IsAddFriend         bool   `yaml:"IsAddFriend"`
+	Lim                 int    `yaml:"Lim"`
+	Tyt                 int    `yaml:"Tyt"`
+	IFC                 bool   `yaml:"IFC"`
 	Node                string
 	Npm                 string
 	Python              string
 	Pip                 string
 	NoAdmin             bool   `yaml:"no_admin"`
 	QbotConfigFile      string `yaml:"qbot_config_file"`
-	IsAddFriend         bool   `yaml:"IsAddFriend"`
-	Lim                 int    `yaml:"Lim"`
-        tytnum              int    `yaml:"tytnum"`
 	Repos               []Repo
 	HttpProxyServerPort int `yaml:"http_proxy_server_port"`
 }
@@ -90,6 +93,9 @@ func initConfig() {
 	if Config.Master == "" {
 		Config.Master = "xxxx"
 	}
+	if Config.CTime == "" {
+		Config.CTime = "10"
+	}
 	if Config.Mode != Parallel {
 		Config.Mode = Balance
 	}
@@ -98,6 +104,9 @@ func initConfig() {
 	}
 	if Config.NoGhproxy {
 		GhProxy = ""
+	}
+	if Config.Tyt == 0 {
+		Config.Tyt = 8
 	}
 	if Config.Database == "" {
 		Config.Database = ExecPath + "/.xdd.db"
