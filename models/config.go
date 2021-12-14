@@ -43,6 +43,7 @@ type Yaml struct {
 	Lim                 int    `yaml:"Lim"`
 	Tyt                 int    `yaml:"Tyt"`
 	IFC                 bool   `yaml:"IFC"`
+	Later               int    `yaml:"Later"`
 	Node                string
 	Npm                 string
 	Python              string
@@ -73,7 +74,7 @@ func initConfig() {
 		s, _ := ioutil.ReadAll(f)
 		if len(s) == 0 {
 			logs.Info("下载配置%s", name)
-			r, err := httplib.Get(GhProxy + "https://raw.githubusercontent.com/zhuanke8/xdd/main/conf/demo_" + name).Response()
+			r, err := httplib.Get(GhProxy + "https://raw.githubusercontent.com/zhuanke8/xdd-plus/main/conf/demo_" + name).Response()
 			if err == nil {
 				io.Copy(f, r.Body)
 			}
@@ -108,6 +109,9 @@ func initConfig() {
 	if Config.Tyt == 0 {
 		Config.Tyt = 8
 	}
+	if Config.Later == 0 {
+		Config.Later = 60
+	}
 	if Config.Database == "" {
 		Config.Database = ExecPath + "/.xdd.db"
 	}
@@ -124,7 +128,6 @@ func initConfig() {
 		Config.Python = "python3"
 	}
 	if Config.Pip == "" {
-		Config.Pip = "Pip3"
+		Config.Pip = "pip3"
 	}
-
 }

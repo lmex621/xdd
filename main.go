@@ -11,9 +11,9 @@ import (
 	"github.com/beego/beego/v2/server/web/context"
 
 	"github.com/beego/beego/v2/server/web"
-	"github.com/zhuanke8/xdd/controllers"
-	"github.com/zhuanke8/xdd/models"
-	"github.com/zhuanke8/xdd/qbot"
+	"github.com/zhuanke8/xdd-plus/controllers"
+	"github.com/zhuanke8/xdd-plus/models"
+	"github.com/zhuanke8/xdd-plus/qbot"
 )
 
 var theme = ""
@@ -27,7 +27,7 @@ func main() {
 	})
 	web.Get("/", func(ctx *context.Context) {
 		if models.Config.Theme == "" {
-			models.Config.Theme = models.GhProxy + "https://ghproxy.com/https://raw.githubusercontent.com/zhuanke8/xdd/main/theme/admin.html"
+			models.Config.Theme = models.GhProxy + "https://ghproxy.com/https://raw.githubusercontent.com/764763903a/xdd-plus/main/theme/admin.html"
 		}
 		if theme != "" {
 			ctx.WriteString(theme)
@@ -53,11 +53,14 @@ func main() {
 	})
 	web.Router("/api/login/qrcode", &controllers.LoginController{}, "get:GetQrcode")
 	web.Router("/api/login/qrcode.png", &controllers.LoginController{}, "get:GetQrcode")
+	web.Router("/api/login/qrcode1", &controllers.LoginController{}, "get:GetQrcode1")
 	web.Router("/api/login/query", &controllers.LoginController{}, "get:Query")
 	web.Router("/api/login/cookie", &controllers.LoginController{}, "get:Cookie")
 	web.Router("/api/login/admin", &controllers.LoginController{}, "post:IsAdmin")
 	web.Router("/api/login/cklogin", &controllers.LoginController{}, "post:CkLogin")
 	web.Router("/api/login/smslogin", &controllers.LoginController{}, "post:SMSLogin")
+	web.Router("/api/getUserInfo", &controllers.LoginController{}, "post:GetUserInfo")
+	web.Router("/api/getUserInfo", &controllers.LoginController{}, "get:GetUserInfo")
 	web.Router("/api/account", &controllers.AccountController{}, "get:List")
 	web.Router("/api/account", &controllers.AccountController{}, "post:CreateOrUpdate")
 	web.Router("/admin", &controllers.AccountController{}, "get:Admin")

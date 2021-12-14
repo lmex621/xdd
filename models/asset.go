@@ -66,39 +66,20 @@ func DailyAssetsPush() {
 	}
 }
 func (ck *JdCookie) Query1() string {
-	name:="jd_bean_change_new.js"
-	envs:=[]Env{{Name:"pins",Value:"&"+ck.PtPin}}
-	msg:=runTask(&Task{Path:name,Envs:envs},&Sender{})
+	name := "jd_bean_change_new.js"
+	envs := []Env{{Name: "pins", Value: "&" + ck.PtPin}}
+	msg := runTask(&Task{Path: name, Envs: envs}, &Sender{})
 	//log.Info(msg)
-	if !strings.Contains(msg,"cookies"){
-		msg=regexp.MustCompile(`^(.+\s+){3}|\s*.+\s*$|.*东东工厂.*\s*`).ReplaceAllString(msg,"")
-		msg=fmt.Sprintf("京东账号用户名：%s\n京东账号昵称：%s\n绑定QQ: %v\n用户等级：%v\n等级名称：%v\n更新时间: %s\n%s",ck.PtPin,ck.Nickname,ck.QQ,ck.UserLevel,ck.LevelName,ck.CreateAt,msg)
-	}else if CookieOK(ck){
-		msg=fmt.Sprintf("查询失败\n京东账号用户名：%s\n京东账号昵称：%s\n备注: %s\n%s",ck.PtPin,ck.Nickname,ck.Note,msg)
-	}else{
-		msg=fmt.Sprintf("失效账号\n京东账号用户名：%s\n京东账号昵称：%s备注: %s",ck.PtPin,ck.Nickname,ck.Note)
+	if !strings.Contains(msg, "cookies") {
+		msg = regexp.MustCompile(`^(.+\s+){3}|\s*.+\s*$|.*东东工厂.*\s*`).ReplaceAllString(msg, "")
+		msg = fmt.Sprintf("账号昵称：%s\n绑定QQ: %v\n用户等级：%v\n等级名称：%v\n优先级: %v\n%s", ck.Nickname, ck.QQ, ck.UserLevel, ck.LevelName, ck.Priority, msg)
+	} else if CookieOK(ck) {
+		msg = fmt.Sprintf("查询失败\n账号: %s\n备注: %s\n%s", ck.PtPin, ck.Note, msg)
+	} else {
+		msg = fmt.Sprintf("失效账号\n账号: %s\n备注: %s", ck.PtPin, ck.Note)
 	}
 	return msg
 }
-
-func (ck *JdCookie) Query2() string {
-	name:="jd_all_bean_change.js"
-	envs:=[]Env{{Name:"pins",Value:"&"+ck.PtPin}}
-	msg:=runTask(&Task{Path:name,Envs:envs},&Sender{})
-	//log.Info(msg)
-	if !strings.Contains(msg,"cookies"){
-		msg=regexp.MustCompile(`^(.+\s+){3}|\s*.+\s*$|.*东东工厂.*\s*`).ReplaceAllString(msg,"")
-		msg=fmt.Sprintf("京东账号用户名：%s\n京东账号昵称：%s\n绑定QQ: %v\n用户等级：%v\n等级名称：%v\n更新时间: %s\n%s",ck.PtPin,ck.Nickname,ck.QQ,ck.UserLevel,ck.LevelName,ck.CreateAt,msg)
-	}else if CookieOK(ck){
-		msg=fmt.Sprintf("查询失败\n京东账号用户名：%s\n京东账号昵称：%s\n备注: %s\n%s",ck.PtPin,ck.Nickname,ck.Note,msg)
-	}else{
-		msg=fmt.Sprintf("失效账号\n京东账号用户名：%s\n京东账号昵称：%s备注: %s",ck.PtPin,ck.Nickname,ck.Note)
-	}
-	return msg
-}
-
-
-
 
 func (ck *JdCookie) Query() string {
 	msgs := []string{
@@ -107,18 +88,11 @@ func (ck *JdCookie) Query() string {
 	if ck.Note != "" {
 		msgs = append(msgs, fmt.Sprintf("账号备注：%s", ck.Note))
 	}
-
 	asset := Asset{}
-
-
-	
 	if CookieOK(ck) {
-		msgs = append(msgs, fmt.Sprintf("京东账户昵称：%v", ck.Nickname))
+		//msgs = append(msgs, fmt.Sprintf("优先级：%v", ck.Priority))
 		msgs = append(msgs, fmt.Sprintf("用户等级：%v", ck.UserLevel))
-		msgs = append(msgs, fmt.Sprintf("绑定QQ：%v", ck.QQ))
-		msgs = append(msgs, fmt.Sprintf("绑定时间：%v", ck.CreateAt))
 		msgs = append(msgs, fmt.Sprintf("等级名称：%v", ck.LevelName))
-		
 		cookie := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
 		var rpc = make(chan []RedList)
 		var fruit = make(chan string)
@@ -806,3 +780,37 @@ func jdzz(cookie string, state chan int64) { //
 	mmc, _ := jsonparser.GetString(data, "data", "totalNum")
 	state <- int64(Int(mmc))
 }
+
+// func jxgc() {
+// 	req := httplib.Get(fmt.Sprintf(`https://m.jingxi.com/dreamfactory/userinfo/GetUserInfo?zone=dream_factory&pin=&sharePin=&shareType=&materialTuanPin=&materialTuanId=&source=&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now() + 2}&_ste=1`))
+// 	req.Header("Host", "api.m.jd.com")
+// 	req.Header("Accept-Language", "zh-cn")
+// 	req.Header("Accept-Encoding", "gzip, deflate, br")
+// 	req.Header("Referer", "http://wq.jd.com/wxapp/pages/hd-interaction/index/index")
+// 	req.Header("User-Agent", ua)
+// 	req.Header("cookie", cookie)
+// 	req.Header("Content-Type", "application/json")
+// 	data, _ := req.Bytes()
+// }
+
+// // 惊喜的Taskurl
+// function jxTaskurl(functionId, body = '', stk) {
+// 	let url = `https://m.jingxi.com/dreamfactory/${functionId}?zone=dream_factory&${body}&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now() + 2}&_ste=1`
+// 	url += `&h5st=${decrypt(Date.now(), stk, '', url)}`
+// 	if (stk) {
+// 	    url += `&_stk=${encodeURIComponent(stk)}`;
+// 	}
+// 	return {
+// 	    url,
+// 	    headers: {
+// 		   'Cookie': cookie,
+// 		   'Host': 'm.jingxi.com',
+// 		   'Accept': '*/*',
+// 		   'Connection': 'keep-alive',
+// 		   'User-Agent': functionId === 'AssistFriend' ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" : 'jdpingou',
+// 		   'Accept-Language': 'zh-cn',
+// 		   'Referer': 'https://wqsd.jd.com/pingou/dream_factory/index.html',
+// 		   'Accept-Encoding': 'gzip, deflate, br',
+// 	    }
+// 	}
+//  }

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -18,6 +19,7 @@ var SendQQ = func(a int64, b interface{}) {
 var SendQQGroup = func(a int64, b int64, c interface{}) {
 
 }
+
 var ListenQQPrivateMessage = func(uid int64, msg string) {
 	SendQQ(uid, handleMessage(msg, "qq", int(uid)))
 }
@@ -34,6 +36,10 @@ var ListenQQGroupMessage = func(gid int64, uid int64, msg string) {
 
 var replies = map[string]string{}
 
+func AggQQ() {
+
+}
+
 func InitReplies() {
 	f, err := os.Open(ExecPath + "/conf/reply.php")
 	if err == nil {
@@ -45,7 +51,7 @@ func InitReplies() {
 		}
 	}
 	if _, ok := replies["壁纸"]; !ok {
-		replies["壁纸"] = "https://api.btstu.cn/sjbz/api.php"
+		replies["壁纸"] = "https://laosepi.org/gqpic.php"
 	}
 }
 
@@ -70,6 +76,11 @@ var handleMessage = func(msgs ...interface{}) interface{} {
 	if sender.UserID == Config.TelegramUserID || sender.UserID == int(Config.QQID) {
 		sender.IsAdmin = true
 	}
+	if sender.IsAdmin == false {
+		if IsUserAdmin(strconv.Itoa(sender.UserID)) {
+			sender.IsAdmin = true
+		}
+	}
 	for i := range codeSignals {
 		for j := range codeSignals[i].Command {
 			if codeSignals[i].Command[j] == head {
@@ -84,6 +95,98 @@ var handleMessage = func(msgs ...interface{}) interface{} {
 	}
 	switch msg {
 	default:
+		{ //沃邮箱
+			ss := regexp.MustCompile(`https://nyan.mail.*3D`).FindStringSubmatch(msg)
+			if len(ss) > 0 {
+				var u User
+				if db.Where("number = ?", sender.UserID).First(&u).Error != nil {
+					return 0
+				}
+				db.Model(u).Updates(map[string]interface{}{
+					"womail": ss[0],
+				})
+				sender.Reply(fmt.Sprintf("沃邮箱提交成功!"))
+				return nil
+			}
+		}
+		{
+			ss := regexp.MustCompile(`pin=([^;=\s]+);wskey=([^;=\s]+)`).FindAllStringSubmatch(msg, -1)
+			if len(ss) > 0 {
+				for _, s := range ss {
+					wkey := "pin=" + s[1] + ";wskey=" + s[2] + ";"
+					//rsp := cmd(fmt.Sprintf(`python3 test.py "%s"`, wkey), &Sender{})
+					rsp, err := getKey(wkey)
+					if err != nil {
+						logs.Error(err)
+					}
+					if strings.Contains(rsp, "fake_") {
+						logs.Error("wskey错误")
+						sender.Reply(fmt.Sprintf("wskey错误 除京东APP皆不可用"))
+					} else {
+						ptKey := FetchJdCookieValue("pt_key", rsp)
+						ptPin := FetchJdCookieValue("pt_pin", rsp)
+						ck := JdCookie{
+							PtPin: ptPin,
+							PtKey: ptKey,
+							WsKey: s[2],
+						}
+						if CookieOK(&ck) {
+
+							if sender.IsQQ() {
+								ck.QQ = sender.UserID
+							} else if sender.IsTG() {
+								ck.Telegram = sender.UserID
+							}
+							if nck, err := GetJdCookie(ck.PtPin); err == nil {
+								nck.InPool(ck.PtKey)
+								if nck.WsKey == "" || len(nck.WsKey) == 0 {
+									if sender.IsQQ() {
+										ck.Update(QQ, ck.QQ)
+									}
+									nck.Update(WsKey, ck.WsKey)
+									msg := fmt.Sprintf("写入WsKey，并更新账号%s", ck.PtPin)
+									sender.Reply(fmt.Sprintf(msg))
+									(&JdCookie{}).Push(msg)
+									logs.Info(msg)
+								} else {
+									if nck.WsKey == ck.WsKey {
+										msg := fmt.Sprintf("重复写入")
+										sender.Reply(fmt.Sprintf(msg))
+										(&JdCookie{}).Push(msg)
+										logs.Info(msg)
+									} else {
+										nck.Updates(JdCookie{
+											WsKey: ck.WsKey,
+										})
+										msg := fmt.Sprintf("更新WsKey，并更新账号%s", ck.PtPin)
+										sender.Reply(fmt.Sprintf(msg))
+										(&JdCookie{}).Push(msg)
+										logs.Info(msg)
+									}
+								}
+
+							} else {
+								NewJdCookie(&ck)
+
+								msg := fmt.Sprintf("添加账号，账号名:%s", ck.PtPin)
+
+								if sender.IsQQ() {
+									ck.Update(QQ, ck.QQ)
+								}
+
+								sender.Reply(fmt.Sprintf(msg))
+								sender.Reply(ck.Query())
+								(&JdCookie{}).Push(msg)
+							}
+						}
+						go func() {
+							Save <- &JdCookie{}
+						}()
+						return nil
+					}
+				}
+			}
+		}
 		{ //tyt
 			ss := regexp.MustCompile(`packetId=(\S+)(&|&amp;)currentActId`).FindStringSubmatch(msg)
 			if len(ss) > 0 {
@@ -92,55 +195,53 @@ var handleMessage = func(msgs ...interface{}) interface{} {
 					if coin < Config.Tyt {
 						return fmt.Sprintf("推一推需要%d个许愿币", Config.Tyt)
 					}
-					RemCoin(sender.UserID, 80)
+					RemCoin(sender.UserID, Config.Tyt)
 					sender.Reply(fmt.Sprintf("推一推即将开始，已扣除%d个许愿币", Config.Tyt))
 				} else {
 					sender.Reply(fmt.Sprintf("推一推即将开始，已扣除%d个许愿币，管理员通道", Config.Tyt))
 				}
+
 				runTask(&Task{Path: "jd_tyt.js", Envs: []Env{
 					{Name: "tytpacketId", Value: ss[1]},
 				}}, sender)
 				return nil
 			}
 		}
-
-
-{ //格式错误提示
-			ss := regexp.MustCompile(`pt_pin=([^;=\s]+);\s*pt_key=([^;=\s]+)`).FindAllStringSubmatch(msg, -1)
-
-			if len(ss) > 0 {
-				sender.Reply(fmt.Sprintf("淦，正确格式是【pt_key=xxx;pt_pin=xxx;】,pt_key在前,pt_pin在后,前后各一个分号，教了多少次了？憨逼！"))
-				
+		{ //挖宝
+			ss := regexp.MustCompile(`activityId=(\S+)(&|&amp;)inviterId=(\S+)(&|&amp;)inviterCode=(\w+)(&|&amp;)`).FindStringSubmatch(msg)
+			if len(ss) > 6 {
+				if !sender.IsAdmin {
+					coin := GetCoin(sender.UserID)
+					if coin < 188 {
+						return "发财挖宝需要88个许愿币。"
+					}
+					RemCoin(sender.UserID, 188)
+					sender.Reply("发财挖宝即将开始，已扣除88个许愿币。")
+				}
+				wbHelp := GetEnv("wbHelp")
+				if wbHelp == "" {
+					wbHelp = "0"
+				}
+				wbHelpMax := GetEnv("wbHelpMax")
+				if wbHelpMax == "" {
+					wbHelpMax = "60"
+				}
+				runTask(&Task{Path: "jd_wb.js", Envs: []Env{
+					{Name: "activityId", Value: ss[1]}, {Name: "inviter", Value: ss[3]}, {Name: "inviteCode", Value: ss[5]}, {Name: "helpMax", Value: wbHelpMax}, {Name: "wbHelp", Value: wbHelp},
+				}}, sender)
+				return nil
 			}
 		}
-
-
-		
-		
-{ //格式错误提示
-			ss := regexp.MustCompile(`pt_pin=([^;=\s]+);\s*pt_key=([^;=\s]+)`).FindAllStringSubmatch(msg, -1)
-
-			if len(ss) > 0 {
-				sender.Reply(fmt.Sprintf("淦，正确格式是【pt_key=xxx;pt_pin=xxx;】,pt_key在前,pt_pin在后,前后各一个分号，教了多少次了？憨逼！"))
-				
-			}
-		}
-
-
-
-{ //
-			ss := regexp.MustCompile(`pt_key=([^;=\s]+);\s*pt_pin=([^;=\s]+)`).FindAllStringSubmatch(msg, -1)
-
-			if len(ss) > 0 {
-
-				xyb := 0
-				for _, s := range ss {
+		{
+			if strings.Contains(msg, "pt_key") {
+				ptKey := FetchJdCookieValue("pt_key", msg)
+				ptPin := FetchJdCookieValue("pt_pin", msg)
+				if len(ptPin) > 0 && len(ptKey) > 0 {
 					ck := JdCookie{
-						PtKey: s[1],
-						PtPin: s[2],
+						PtKey: ptKey,
+						PtPin: ptPin,
 					}
 					if CookieOK(&ck) {
-						xyb++
 						if sender.IsQQ() {
 							ck.QQ = sender.UserID
 						} else if sender.IsTG() {
@@ -168,6 +269,8 @@ var handleMessage = func(msgs ...interface{}) interface{} {
 									ck.Update(QQ, ck.QQ)
 								}
 								sender.Reply(fmt.Sprintf("很棒，许愿币+1，余额%d,请群里面@Q群管家查看新手任务注意事项，不做完新手任务会黑号，请务必重视！", AddCoin(sender.UserID)))
+								sender.Reply(ck.Query())
+								(&JdCookie{}).Push(msg)
 								logs.Info(msg)
 							}
 						}
@@ -215,5 +318,11 @@ var handleMessage = func(msgs ...interface{}) interface{} {
 	return nil
 }
 
-
-
+func FetchJdCookieValue(key string, cookies string) string {
+	match := regexp.MustCompile(key + `=([^;]*);{0,1}`).FindStringSubmatch(cookies)
+	if len(match) == 2 {
+		return match[1]
+	} else {
+		return ""
+	}
+}

@@ -11,7 +11,7 @@ import (
 func getVhelpRule(num int) string {
 	rules := ""
 	var codes = map[string][]string{
-	/*	"Fruit":        {},
+		"Fruit":        {},
 		"Pet":          {},
 		"Bean":         {},
 		"JdFactory":    {},
@@ -21,7 +21,7 @@ func getVhelpRule(num int) string {
 		"Joy":          {},
 		"Sgmh":         {},
 		"Cfd":          {},
-		"Cash":         {},*/
+		"Cash":         {},
 	}
 	cks := GetJdCookies()
 	for _, ck := range cks {
@@ -79,7 +79,7 @@ func getVhelpRule(num int) string {
 
 func getQLHelp(num int) map[string]string {
 	var codes = map[string][]string{
-	/*	"Fruit":        {},
+		"Fruit":        {},
 		"Pet":          {},
 		"Bean":         {},
 		"JdFactory":    {},
@@ -89,7 +89,7 @@ func getQLHelp(num int) map[string]string {
 		"Joy":          {},
 		"Sgmh":         {},
 		"Cfd":          {},
-		"Cash":         {},*/
+		"Cash":         {},
 	}
 	cks := GetJdCookies()
 	for _, ck := range cks {
@@ -128,7 +128,7 @@ func getQLHelp(num int) map[string]string {
 		}
 	}
 	var e = map[string]string{
-	/*	"Fruit":        "",
+		"Fruit":        "",
 		"Pet":          "",
 		"Bean":         "",
 		"JdFactory":    "",
@@ -138,7 +138,7 @@ func getQLHelp(num int) map[string]string {
 		"Joy":          "",
 		"Sgmh":         "",
 		"Cfd":          "",
-		"Cash":         "",*/
+		"Cash":         "",
 	}
 	for k := range codes {
 		vv := codes[k]
@@ -190,7 +190,7 @@ func WriteHelpJS(acks []JdCookie) {
 		return sb.Where(fmt.Sprintf("%s = ?", Help), True)
 	})
 	var codes = map[string][]string{
-	/*	"Fruit":        {},
+		"Fruit":        {},
 		"Pet":          {},
 		"Bean":         {},
 		"JdFactory":    {},
@@ -200,7 +200,7 @@ func WriteHelpJS(acks []JdCookie) {
 		"Joy":          {},
 		"Sgmh":         {},
 		"Cfd":          {},
-		"Cash":         {},*/
+		"Cash":         {},
 	}
 	for _, ck := range cks {
 		for k := range codes {
@@ -236,7 +236,7 @@ func WriteHelpJS(acks []JdCookie) {
 		}
 	}
 	var e = map[string][]string{
-	/*	"Fruit":        {},
+		"Fruit":        {},
 		"Pet":          {},
 		"Bean":         {},
 		"JdFactory":    {},
@@ -246,7 +246,7 @@ func WriteHelpJS(acks []JdCookie) {
 		"Joy":          {},
 		"Sgmh":         {},
 		"Cfd":          {},
-		"Cash":         {},*/
+		"Cash":         {},
 	}
 	var f = func(ss []string, s string) string {
 		tss := []string{}

@@ -8,10 +8,16 @@ containers:
     weigth:  
     mode: parallel
     limit: 9999 #限制容器ck数目
+AtTime:  #填写1-12之间的数  填错自负默认为10  10点容易出现高峰超时。
+IsHelp:   #填写true或者false  false
+IsOldV4: #填写true或者false  false是否新版或者旧版V4
+Wskey: # 填空默认禁用wskey转换 需要的填true
+IsAddFriend: #填写true或者false  false
+Lim: #填写1-N 代表限制次数
+Tyt: #填写1-N 代表推一推需要的互助值，默认为8
+Later: #延时防止黑IP自己设置 默认60 不怕黑的改为1即可 单位是秒
+ApiToken: #短信接入token参数
 theme: ./theme/admin.html #自定义主题，支持本地、网络路径
-Lim:  #填写1-N 代表限制次数
-IsAddFriend:  #填写true或者false  false
-Tyt:  #填写1-N 代表推一推需要的互助值，默认为8
 static: ./static #静态文件 便于自定义二维码页面时，引入css、js等文件（不用动）
 master:  #管理员账户pin，有多个用'&'拼接（访问ip:8080/admin使用）可以自定义密码如  admin 后面不能有注释，配置后删除
 #数据库 支持sqlite3、mysql和postgres
@@ -25,6 +31,8 @@ resident: #均衡模式下所有容器共同的账号pin，有多个用'&'拼接
 user_agent:  #自定义ua
 telegram_bot_token:  #telegram bot token
 telegram_user_id:  #telegrame user id
+
+TGURL: #填写TG代理地址参考https://www.kejiwanjia.com/server/5221.html#3worker
 qquid:  #接收通知的qq号
 qqgid: #监听的qq群
 qbot_public_mode: true #qq机器人群聊模式，默认私聊模式
@@ -33,5 +41,3 @@ no_ghproxy: false #更新资源是否不使用代理 默认false
 daily_asset_push_cron: 58 10 * * * #日常资产推送时间
 repos:
   - git: https://github.com/shufflewzc/faker2.git
-
-
